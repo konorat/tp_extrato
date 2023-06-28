@@ -29,7 +29,7 @@ public class CSVReader {
 
     public LinkedListSimple<Transaction> getText() {
 
-        File file = new File(getPath());
+        File file = new File(path);
         Scanner in = null;
         String final1 = "";
 

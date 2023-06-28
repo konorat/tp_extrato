@@ -15,6 +15,30 @@ public class Transaction {
         this.value = value;
     }
 
+    public String getIdconta() {
+        return idconta;
+    }
+
+    public void setIdconta(String idconta) {
+        this.idconta = idconta;
+    }
+
+    public String getOperation() {
+        return operation;
+    }
+
+    public void setOperation(String operation) {
+        this.operation = operation;
+    }
+
+    public BigDecimal getValue() {
+        return value;
+    }
+
+    public void setValue(BigDecimal value) {
+        this.value = value;
+    }
+
     @Override
     public String toString() {
         return "Transaction{" +
