@@ -1,10 +1,7 @@
 package br.com.konorat.services;
 
 import br.com.konorat.domain.LinkedListSimple;
-import br.com.konorat.domain.LinkedListTr;
 import br.com.konorat.domain.Transaction;
-import org.w3c.dom.Node;
-
 
 import java.io.File;
 import java.io.IOException;
@@ -31,7 +28,6 @@ public class CSVReader {
 
         File file = new File(path);
         Scanner in = null;
-        String final1 = "";
 
         LinkedListSimple<Transaction> lls = new LinkedListSimple<>();
 
@@ -58,7 +54,6 @@ public class CSVReader {
         }
         finally {
             in.close();
-
         }
         return lls;
     }

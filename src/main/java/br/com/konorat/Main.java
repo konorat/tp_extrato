@@ -2,20 +2,25 @@ package br.com.konorat;
 
 import br.com.konorat.domain.*;
 import br.com.konorat.services.CSVReader;
-import br.com.konorat.services.Report;
 import br.com.konorat.domain.LinkedListSimple;
 
-
-import java.lang.reflect.AccessibleObject;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Scanner;
 
-
-// Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
-// then press Enter. You can now see whitespace characters in your code.
 public class Main {
-    public static <T> void main(String[] args) {
+    public static <T> void main(String[] args) throws IOException {
 
-        CSVReader csv = new CSVReader("c:\\ws-java\\extrato_contas\\testes\\teste.txt");
+    	Scanner in = new Scanner(System.in);
+    	System.out.println("Digite o caminho do arquivo CSV(Use duas barras para representar barra): ");
+    	//C:\\Users\\aluno\\Desktop\\konorat\\tp_extrato\\testes\\teste.txt
+    	
+    	String path = in.nextLine();
+    
+        CSVReader csv = new CSVReader(path);
+        
+        in.close();
+        
 
         LinkedListSimple<Transaction> lls = new LinkedListSimple<>();
         lls = csv.getText();
@@ -71,7 +76,7 @@ public class Main {
             }
             newBalance = new BigDecimal(0);
         }
-        System.out.println(accs.printList());
+        accs.printList();
     }
 }
 

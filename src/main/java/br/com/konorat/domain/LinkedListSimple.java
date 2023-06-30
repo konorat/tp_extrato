@@ -1,7 +1,12 @@
 package br.com.konorat.domain;
 
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.math.BigDecimal;
-import java.util.Objects;
 
 public class LinkedListSimple<T> {
 
@@ -31,13 +36,13 @@ public class LinkedListSimple<T> {
         }
     }
 
-    private Node first;
+    private Node<T> first;
 
-    public Node getFirst() {
+    public Node<T> getFirst() {
         return first;
     }
 
-    public void setFirst(Node first) {
+    public void setFirst(Node<T> first) {
         this.first = first;
     }
 
@@ -53,10 +58,9 @@ public class LinkedListSimple<T> {
         return search(dado);
     }
     public boolean searchBol(T dado) {
-        //return search(dado) != null;
-      for (Node node = first; node != null; node = node.next)
-            if (dado == node.dado) return true; //econtrou o elemento
-       return false;                     // não encontrou o elemento
+      for (Node<T> node = first; node != null; node = node.next)
+            if (dado == node.dado) return true;
+       return false;                     
 
     }
 
@@ -69,90 +73,69 @@ public class LinkedListSimple<T> {
     }
 
     public Node<Account> searchById(Integer id) {
-        for (Node<Account> node = first; node != null; node = node.next){
+        for (Node<Account> node = (Node<Account>) first; node != null; node = node.next){
             if(node.dado.getId().equals(id)){
                 return node;
             }
         }
         return null;
-/*        Node<Account> aux = first;
-        while(aux != null && Objects.equals(aux.dado.getId(), acc.getId())) {
-            aux = aux.next;
-        }
-        return aux;*/
-
     }
 
     public void insertFirst(T dado) {
         Node newNode = new Node(dado);
-        newNode.next = first; //novoNo -> inicio antigo
-        first = newNode;      // inicio -> novoNo
+        newNode.next = first;
+        first = newNode;
     }
 
 
-    public void removeFirst() { //elimina o primiro item da lista
-        first = first.next; // elimina o elemento e reposiciona o início
+    public void removeFirst() {
+        first = first.next;
     }
 
-/*    public String printList() {
-        if (isEmpty()) return "Lista vazia\n"; //teste de lista vazia
-        String str = " ";
-        int i = 0;
-        for (Node<T> node = first; node != null; node = node.next){
-            i++;
-            System.out.println(i);
-            str += " " + node.dado.toString() + "\n";
-        }
-        return str + "\n";
-    }*/
-
-    public String printList() {
-        if (isEmpty()) return "Lista vazia\n"; //teste de lista vazia
-
-        StringBuilder builder = new StringBuilder();
+    public void printList() throws IOException {
+        if (isEmpty()) return;
+        
+        OutputStream os = new FileOutputStream("relatorio.txt");
+        Writer wr = new OutputStreamWriter(os);
+        BufferedWriter br = new BufferedWriter(wr);
 
         BigDecimal saldoTemp = new BigDecimal(0);
 
-        for (Node<Account> node = first; node != null; node = node.next){
+        for (Node<Account> node = (Node<Account>) first; node != null; node = node.next){
 
 
-        builder.append("Número da Conta: " + node.dado.getId() + "\n");
-        builder.append("-------------------------------------" + "\n");
-        builder.append("Detalhes das Transações: " + "\n");
-        builder.append("-------------------------------------" + "\n");
-        builder.append("Tipo         | Valor  | Saldo     " + "\n");
-        builder.append("-------------------------------------" + "\n");
+        br.write("Número da Conta: " + node.dado.getId() + "\n");
+        br.write("-------------------------------------" + "\n");
+        br.write("Detalhes das Transações: " + "\n");
+        br.write("-------------------------------------" + "\n");
+        br.write("Tipo         | Valor  | Saldo     " + "\n");
+        br.write("-------------------------------------" + "\n");
 
         for(Node<Transaction> nodeTr = node.dado.getTrs().getFirst(); nodeTr != null; nodeTr = nodeTr.next) {
             switch(nodeTr.dado.getOperation()){
                 case "1":
                     saldoTemp = saldoTemp.subtract(nodeTr.dado.getValue());
-                    builder.append("Saque        | " + nodeTr.dado.getValue() + "    | " + saldoTemp + "\n");
+                    br.write("Saque        | " + nodeTr.dado.getValue() + "    | " + saldoTemp + "\n");
                 break;
 
                 case "2":
                     saldoTemp = saldoTemp.add(nodeTr.dado.getValue());
-                    builder.append("Deposito     | " + nodeTr.dado.getValue() + "    | " + saldoTemp + "\n");
+                    br.write("Deposito     | " + nodeTr.dado.getValue() + "    | " + saldoTemp + "\n");
                 break;
 
                 case "4":
                     saldoTemp = saldoTemp.subtract(nodeTr.dado.getValue());
-                    builder.append("Pagamento    | " + nodeTr.dado.getValue() + "    | " + saldoTemp + "\n");
+                    br.write("Pagamento    | " + nodeTr.dado.getValue() + "    | " + saldoTemp + "\n");
 
             }
         }
 
         saldoTemp = new BigDecimal(0);
 
-        builder.append("-------------------------------------" + "\n");
-        builder.append("Saldo Atual: " + node.dado.getBalance() + "\n");
-        builder.append("\n");
-
+        br.write("-------------------------------------" + "\n");
+        br.write("Saldo Atual: " + node.dado.getBalance() + "\n");
+        br.write("\n");
         }
-
-        return builder.toString();
+        br.close();
     }
-
-
-
 }
